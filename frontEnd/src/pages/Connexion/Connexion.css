@@ -1,0 +1,90 @@
+* {
+    color: white;
+}
+
+.connexion--page{
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.login--introduction{
+    width: 70%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.login--introduction > img{
+    margin-bottom: 15px;
+}
+
+.login--introduction > span{
+    font-size: 28px;
+    font-weight: 600;
+}
+.form--connexion{
+    border: 5px solid white;
+    border-radius: 10px;
+    width: 420px;
+    padding: 30px;
+    margin-right: 40px;
+}
+
+.form--connexion > h2{
+    margin-top: -5px;
+    font-size: 26px;
+}
+
+.submit--button{
+    position: relative;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    margin: 20px auto;
+    border: 5px solid white;
+    border-radius: 10px;
+    height: 40px;
+    width: 200px;
+    color: white;
+    background-color: #fff0;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.submit--button:hover{
+    background-color: #fff;
+    color:#D95A5A;
+}
+
+.link--sign{
+    cursor: pointer;
+    font-size: 17px;
+}
+
+.error{
+    color: blue;
+    margin-bottom: 5px;
+}
+@media (max-width: 900px)  {
+    .login--introduction{
+        display: none;
+    }
+    .form--connexion{
+        margin: 5px;   
+    }
+}
+
+@media (max-width: 500px) {
+    .form--connexion{
+        width: 90%;   
+    }
+    
+}
+

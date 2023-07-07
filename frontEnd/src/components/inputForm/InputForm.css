@@ -1,0 +1,29 @@
+.input--form--name{
+    font-weight: 600;
+    color: white;
+    font-size: 20px;
+}
+
+.input--form{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    height: 40px;
+    border-radius: 10px;
+    border: 5px solid #D9D9D9;
+    background-color: #fff0;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.input--form:focus{
+    border-color: white;
+}
+
+.input--form::placeholder{
+    color: #D9D9D9;
+    font-size: 18px;
+    font-weight: 500;
+}
+
