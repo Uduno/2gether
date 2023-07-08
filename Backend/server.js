@@ -3,12 +3,18 @@ const bcrypt = require('bcrypt');
 const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
-
+const ckp = require('cookie-parser');
 const app = express();
+
 const saltRounds = 10;
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin:['http://localhost:5173'],
+  methods:['POST','GET'],
+  credentials: true
+}));
+app.use(ckp());
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -16,6 +22,8 @@ const db = mysql.createConnection({
   password: "",
   database: "2gether"
 });
+
+
 
 db.connect((err) => {
   if (err) {
@@ -82,6 +90,9 @@ app.post('/connexion', (req, res) => {
       bcrypt.compare(req.body.password.toString(), data[0].password, (err, response) => {
         if (err) return res.json({ error: "Erreur de comparaison de mot de passe" });
         if (response) {
+          const name = data[0].name;
+          const token = jwt.sign({name}, "jwt-secret-key", {expiresIn:'1d'});
+          res.cookie('token',token);
           return res.json({ status: "Succes" });
         } else {
           return res.json({ error: "Email ou mot de passe incorrect" });
@@ -93,6 +104,24 @@ app.post('/connexion', (req, res) => {
   });
 });
 
+const verifyUser = (req, res, next) => {
+  const token = req.cookies.token;
+  if(!token){
+    return res.json({ error: "Vous n'êtes pas autoriré" });
+  }else{
+    jwt.verify(token,'jwt-secret-key', (err, decoded)=>{
+      if(err){
+        return  res.json({ error: "Token problem" });
+      }else{
+        req.name = decoded.name;
+        next();
+      }
+    })
+  }
+}
+app.get('/rejoindre',verifyUser, (req,res) => {
+  return res.json({ Status: "Succes", name: req.name });
+})
 
 app.listen(8081, () => {
   console.log('Server is running on port 8081');

@@ -2,12 +2,12 @@ import { useState } from 'react'
 import InputForm from '../../components/inputForm/InputForm'
 import './Connexion.css'
 import image from '../../assets/logo.png';
-import { Link } from 'react-router-dom';
-import { Navigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Importer useNavigate
 import axios from 'axios';
 
 function Connexion() {
-
+  const navigate = useNavigate(); // Utiliser useNavigate pour obtenir la fonction de navigation
+  axios.defaults.withCredentials = true;
   const [values, setValues] = useState({ email: "", password: "" })
   const [error, setError] = useState("")
 
@@ -30,18 +30,19 @@ function Connexion() {
     axios.post('http://localhost:8081/connexion', values)
       .then(res => {
         if (res.data.status === "Succes") {
-          Navigate('/rejoindre');
+          navigate('/rejoindre'); // Utiliser la fonction de navigation
         } else {
-          if (res.data.error.includes("Email")) {
+          const errorMessage = res.data.error;
+          if (errorMessage.includes("Email")) {
             setError(res.data.error);
           } else {
             alert(res.data.error);
           }
         }
       })
-      .catch(err => console.error(err));
+      .catch(err => console.log(err));
   }
-  
+
 
   return (
     <div className='connexion--page'>

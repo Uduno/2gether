@@ -15,7 +15,7 @@ function App() {
         <Route path="/connexion" element={<Connexion/>} />
         <Route path="/inscription" element={<Inscription/>} />
         <Route path="/motdepasseoublié?" element={<Mdpo/>} />
-        <Route path='/rejoindre' element={Rejoindre}/>
+        <Route path='/rejoindre' element={<Rejoindre/>}/>
       </Routes>
     </BrowserRouter>
   )
