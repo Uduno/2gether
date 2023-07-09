@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios';
+import Navbar from '../../components/Navbar/Navbar';
 
 function Rejoindre() {
     const [auth, setAuth] = useState(false)
@@ -24,8 +25,8 @@ function Rejoindre() {
 
     return (
         <div>
+            <Navbar/>
             Hola {name}
-            {message}
         </div>
     )
 }

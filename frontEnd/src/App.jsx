@@ -5,7 +5,8 @@ import Connexion from './pages/Connexion/Connexion'
 import Inscription from './pages/Inscription/Inscription';
 import Mdpo from './pages/Mdpo/Mdpo';
 import Rejoindre from './pages/Rejoindre/Rejoindre';
-
+import Proposer from './pages/Proposer/Proposer';
+import Partenaire from './pages/Partenaire/Partenaire';
 function App() {
 
   return (
@@ -16,6 +17,8 @@ function App() {
         <Route path="/inscription" element={<Inscription/>} />
         <Route path="/motdepasseoublié?" element={<Mdpo/>} />
         <Route path='/rejoindre' element={<Rejoindre/>}/>
+        <Route path='/proposer' element={<Proposer/>}/>
+        <Route path='/partenaire' element={<Partenaire/>}/>
       </Routes>
     </BrowserRouter>
   )
