@@ -3,9 +3,9 @@ import { NavLink } from 'react-router-dom';
 import logo from '../../assets/logo.png';
 import './Navbar.css'
 import { Turn as Hamburger } from 'hamburger-react'
+import chatIcon from '../../assets/icons/Chat.png'
 
-
-function Navbar({isUserLoggedIn}) {
+function Navbar({isUserLoggedIn, profilePhoto}) {
 
   const [isOpen,setOpen] = useState(false);
   const handleClick = () => {
@@ -32,7 +32,7 @@ function Navbar({isUserLoggedIn}) {
             </li>
         </ul>
         <div className='menu--navLinks'>
-        <Hamburger toggled={isOpen} toggle={setOpen} />
+          <Hamburger toggled={isOpen} toggle={setOpen} />
         </div>
         
       </div>
@@ -40,7 +40,12 @@ function Navbar({isUserLoggedIn}) {
       <div className="navbar--right">
         {isUserLoggedIn ? (
           <>
-            <div className="navbar--iconMessage"></div>
+            <div className="navbar--iconMessage">
+              <div className='notifMsg'>
+                <span>9</span>
+              </div>
+              <img src={chatIcon} alt="chat icon" />
+            </div>
             <div className="navbar--profile">
               <img src={profilePhoto} alt="Profil" className="navbar--profilePhoto" />
             </div>

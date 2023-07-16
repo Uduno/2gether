@@ -119,7 +119,12 @@ const verifyUser = (req, res, next) => {
     })
   }
 }
+
 app.get('/rejoindre',verifyUser, (req,res) => {
+  return res.json({ Status: "Succes", name: req.name });
+})
+
+app.get('/proposer',verifyUser, (req,res) => {
   return res.json({ Status: "Succes", name: req.name });
 })
 

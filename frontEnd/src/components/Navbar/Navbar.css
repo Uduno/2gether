@@ -111,7 +111,40 @@
     display: none;
 }
 
+.navbar--iconMessage{
+    margin-right: 20px;
+    height: 32px;
+    width: 32px;
+}
 
+.notifMsg{
+    position: absolute;
+    background-color: black;
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+    justify-content: center;
+    align-items: center;
+    margin-left: 18px;
+    margin-top: -7px;
+}
+
+.notifMsg > span{
+    display: flex;
+    justify-content: center;
+    font-weight: bolder;
+}
+
+
+
+.navbar--profilePhoto{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    border: solid 1px white;
+    background-position: center;
+    background-size: cover;
+}
 @media (max-width:1000px) {
 
 
@@ -197,5 +230,20 @@
     
     .navbar--button:nth-child(2) {
         display: none;
+    }
+
+    .navbar--iconMessage{
+        margin-right: 20px;
+        height: 28px;
+        width: 28px;
+    }
+
+    .navbar--profile{
+        height: 36px;
+        width: 36px;
+    }
+    .navbar--profilePhoto{
+        height: 36px;
+        width: 36px;
     }
 }
