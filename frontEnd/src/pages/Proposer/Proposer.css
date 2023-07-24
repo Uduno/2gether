@@ -92,6 +92,23 @@ textarea {
   cursor: pointer;
 }
 
+#confirm:hover{
+  color: #D95A5A;
+  background-color: white;
+}
+
+.suggestions{
+  display: flex;
+  align-items: center;
+  height: 30px;
+  background-color: white;
+  color: black;
+  max-width: 650px;
+  border-radius: 10px;
+  padding: 5px;
+  cursor: pointer;
+}
+
 @media screen and (max-width: 600px) {
   .form-container {
     flex-direction: column;

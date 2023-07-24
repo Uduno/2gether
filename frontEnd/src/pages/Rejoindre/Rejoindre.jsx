@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../../components/Navbar/Navbar';
 import userIcon from '../../assets/icons/profil.png';
@@ -44,9 +44,14 @@ function Rejoindre() {
                         <label htmlFor="option">Option</label>
                         <select id="option" className="filter-select">
                             <option value="">Sélectionnez une option</option>
-                            <option value="option1">Option 1</option>
-                            <option value="option2">Option 2</option>
-                            <option value="option3">Option 3</option>
+                            <option value="sport_et_activites_physique">Sport et activités physique</option>
+                            <option value="restauration_et_gastronomie">Restauration et gastronomie</option>
+                            <option value="arts_et_culture">Arts et culture</option>
+                            <option value="loisirs_et_divertissement">Loisirs et divertissement</option>
+                            <option value="nature_et_plein_air">Nature et plein air</option>
+                            <option value="shopping_et_mode">Shopping et mode</option>
+                            <option value="evenement_speciaux">Evenement spéciaux</option>
+                            <option value="autres">Autres</option>
                         </select>
                     </div>
                     <div className="filter-item">

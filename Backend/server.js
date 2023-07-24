@@ -5,6 +5,7 @@ const mysql = require('mysql');
 const cors = require('cors');
 const ckp = require('cookie-parser');
 const app = express();
+const axios = require('axios');
 
 const saltRounds = 10;
 
@@ -127,6 +128,9 @@ app.get('/rejoindre',verifyUser, (req,res) => {
 app.get('/proposer',verifyUser, (req,res) => {
   return res.json({ Status: "Succes", name: req.name });
 })
+
+
+
 
 app.listen(8081, () => {
   console.log('Server is running on port 8081');
