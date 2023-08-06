@@ -27,7 +27,7 @@ function Connexion() {
       setError('Les champs email et mot de passe sont obligatoires');
       return;
     }
-    axios.post('http://localhost:8081/connexion', values)
+    axios.post('http://localhost:8081/api/connexion', values)
       .then(res => {
         if (res.data.status === "Succes") {
           navigate('/rejoindre'); // Utiliser la fonction de navigation

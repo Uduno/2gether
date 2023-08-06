@@ -1,21 +1,22 @@
 import { useState, useEffect } from "react";
 import AddressInput from "../../components/AdressInput/AdressInput";
-import {DateInput, validateDates }from "../../components/DateInput/DateInput";
+import { DateInput, validateDates } from "../../components/DateInput/DateInput";
+import ValidateProposition from "../../function/ValidateProposition";
 import axios from 'axios';
 import Navbar from '../../components/Navbar/Navbar';
 import userIcon from '../../assets/icons/profil.png';
 import './Proposer.css'
 
+
 function Proposer() {
     const [auth, setAuth] = useState(false)
     const [message, setMsg] = useState('')
-    const [name, setName] = useState('')
-    const [imagePreviews, setImagePreviews] = useState([null, null, null]);
-    //const [suggestions, setSuggestions] = useState([]);
+    const [imagePreviews, setImagePreviews] = useState("");
+    const [imageSaves, setImageSaves] = useState("");
 
     const [values, setValues] = useState({
         id: "",
-        user_id: "",
+        id_user: "",
         type: "",
         title: "",
         dates: "",
@@ -31,9 +32,6 @@ function Proposer() {
         title: "",
         dates: "",
         location: "",
-        city: "",
-        region: "",
-        country: "",
     })
     function handleChange(event) {
         const { name, value } = event.target
@@ -45,71 +43,127 @@ function Proposer() {
         })
     }
 
-    const handleSelectAdress = (adress,city,region,country) => {
+    const handleSelectAdress = (adress, city, region, country) => {
         setValues(prevValues => ({
-            ...prevValues, location:adress, city:city, region:region, country:country
+            ...prevValues, location: adress, city: city, region: region, country: country
         }))
     }
     const handleSelectDate = (dates) => {
         setValues(prevValues => ({
-            ...prevValues, dates:dates
+            ...prevValues, dates: dates
         }))
     }
 
 
-    //axios.defaults.withCredentials = true;
 
-    function previewImage(event, index) {
-        const file = event.target.files[0];
-        const reader = new FileReader();
+    axios.defaults.withCredentials = true;
 
-        reader.onload = function (e) {
-            const updatedPreviews = [...imagePreviews];
-            updatedPreviews[index] = e.target.result;
-            setImagePreviews(updatedPreviews);
-        };
 
-        if (file) {
-            reader.readAsDataURL(file);
-        }
+  
+    function handleImageChange(event) {
+        const file = event.target.files[0]; // Récupérer le premier fichier du champ de fichier
+        setImageSaves([file]); // Mettre le fichier dans un tableau, car setImageSaves attend un tableau d'images
+        setImagePreviews(URL.createObjectURL(file)); // Créer un aperçu de l'image en utilisant l'URL objet
     }
 
 
 
+
     useEffect(() => {
-        axios.get('http://localhost:8081/proposer')
+        axios.get('http://localhost:8081/api/proposer')
             .then(res => {
                 if (res.data.Status === "Succes") {
                     setAuth(true);
-                    setName(res.data.name)
+                    setValues(prevValues => ({ ...prevValues, id_user: res.data.id }));
+                    // console.log(res.data.id); // Afficher l'ID reçu dans la console
                 } else {
                     setAuth(false);
                     setMsg(res.data.Error);
                 }
             })
-            .then(err => { console.log(err) });
-
+            .catch(err => {
+                console.log(err);
+            });
     }, []);
 
-  
-    function handleSubmit(event){
-        event.preventDefault();
-        console.log(values)
-        if (validateDates(values.dates,setErr)) {
-            // Ici, vous pouvez envoyer les dates validées à votre backend ou faire toute autre opération requise.
-            // Par exemple, vous pouvez convertir les dates en objets Date JavaScript pour un traitement ultérieur.
-            const dateArray = values.dates.split(",").map((date) => date.trim());
-            const formattedDates = dateArray.map((dateStr) => {
-              const [day, month, year] = dateStr.split("/");
-              return new Date(`${year}-${month}-${day}`);
+
+    // Fonction pour générer une ID unique de 10 chiffres
+    const generateUniqueID = () => {
+        const length = 10;
+        const characters = '0123456789';
+        let id = '';
+
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            id += characters[randomIndex];
+        }
+
+        return parseInt(id);
+    };
+
+
+    const uploadFile = async (file, folderPath, fileName) => {
+        //console.log(file)
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('folderPath', folderPath);
+        formData.append('fileName', fileName);
+
+        try {
+            // Remplacez 'http://localhost:8080/upload' par l'URL de votre serveur où se trouve l'endpoint '/upload'.
+            const response = await axios.post('http://localhost:8081/api/saveImage', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
             });
-            
-            // Faire quelque chose avec les dates validées, par exemple les envoyer à votre backend.
-            console.log(formattedDates);
-          }
-          console.log(err)
-       
+
+            console.log('URL du fichier téléchargé :', response.data);
+            // Ici, vous pouvez utiliser l'URL du fichier téléchargé si vous en avez besoin.
+        } catch (error) {
+            console.error('Erreur lors du téléchargement du fichier :', error);
+        }
+    };
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        const id_activity = generateUniqueID()
+        setValues(prevValues => ({
+            ...prevValues, id: id_activity
+        }))
+        console.log(values, imageSaves[0])
+        const valideProp = ValidateProposition(values, err, setErr);
+        if (Object.values(valideProp).every(err => err === "")) {
+            if (!values.title || !values.dates || !values.location | !values.type) {
+                console.error('Champs Incomplets');
+                return; // Arrête l'exécution de la fonction handleSubmit
+            }
+
+            if (validateDates(values.dates, setErr)) {
+                // Ici, vous pouvez envoyer les dates validées à votre backend ou faire toute autre opération requise.
+                // Par exemple, vous pouvez convertir les dates en objets Date JavaScript pour un traitement ultérieur.
+                const dateArray = values.dates.split(",").map((date) => date.trim());
+                const formattedDates = dateArray.map((dateStr) => {
+                    const [day, month, year] = dateStr.split("/");
+                    return new Date(`${year}-${month}-${day}`);
+                });
+                // Faire quelque chose avec les dates validées, par exemple les envoyer à votre backend.
+                // console.log(formattedDates);
+                const newName ="activity_"+ id_activity.toString()+".png";
+                uploadFile(imageSaves[0],"activities",newName)
+            } else {
+                return;
+            }
+
+
+        }
+
+
+
+
     }
+
+
+
 
     return (
         <div>
@@ -131,18 +185,21 @@ function Proposer() {
                                 <option value="evenement_speciaux">Evenement spéciaux</option>
                                 <option value="autres">Autres</option>
                             </select>
+                            {err.type && <p className="error">{err.type}</p>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="input1">Titre de l'activité *</label>
                             <input type="text" id="input1" name="title" onChange={handleChange} placeholder="Titre de l'activité" maxLength="120" />
+                            {err.title && <p className="error">{err.title}</p>}
                         </div>
                         <div className="form-group">
-                             <AddressInput onSelectedAddress={handleSelectAdress}/>
+                            <AddressInput onSelectedAddress={handleSelectAdress} />
+                            {err.location && <p className="error">{err.location}</p>}
                         </div>
-                           
-                 
+
+
                         <div className="form-group">
-                           <DateInput onSelectedDate={handleSelectDate} errorMessage={err.dates}/>
+                            <DateInput onSelectedDate={handleSelectDate} errorMessage={err.dates} />
                         </div>
                         <div className="form-group">
                             <label htmlFor="textarea">Détails de l'activité</label>
@@ -165,29 +222,11 @@ function Proposer() {
                         </div>
                         <div className="image-input">
                             <label htmlFor="image1">
-                                Image 1
+                                Image
                                 <div className="image-preview">
-                                    {imagePreviews[0] ? <img src={imagePreviews[0]} alt="Image 1" /> : <span className="plus">+</span>}
+                                    {imagePreviews ? <img src={imagePreviews} alt="Image 1" /> : <span className="plus">+</span>}
                                 </div>
-                                <input type="file" id="image1" accept="image/*" onChange={(e) => previewImage(e, 0)} />
-                            </label>
-                        </div>
-                        <div className="image-input">
-                            <label htmlFor="image2">
-                                Image 2
-                                <div className="image-preview">
-                                    {imagePreviews[1] ? <img src={imagePreviews[1]} alt="Image 2" /> : <span className="plus">+</span>}
-                                </div>
-                                <input type="file" id="image2" accept="image/*" onChange={(e) => previewImage(e, 1)} />
-                            </label>
-                        </div>
-                        <div className="image-input">
-                            <label htmlFor="image3">
-                                Image 3
-                                <div className="image-preview">
-                                    {imagePreviews[2] ? <img src={imagePreviews[2]} alt="Image 3" /> : <span className="plus">+</span>}
-                                </div>
-                                <input type="file" id="image3" accept="image/*" onChange={(e) => previewImage(e, 2)} />
+                                <input type="file" name="image" id="image1" accept="image/*" onChange={(e) => handleImageChange(e, 0)} />
                             </label>
                         </div>
 

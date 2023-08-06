@@ -8,23 +8,27 @@ import './Rejoindre.css'
 function Rejoindre() {
     const [auth, setAuth] = useState(false)
     const [message, setMsg] = useState('')
-    const [name, setName] = useState('')
+    const [id, setId] = useState('')
 
     axios.defaults.withCredentials = true;
 
     useEffect(() => {
-        axios.get('http://localhost:8081/rejoindre')
-            .then(res => {
-                if (res.data.Status === "Succes") {
-                    setAuth(true);
-                    setName(res.data.name)
-                } else {
-                    setAuth(false);
-                    setMsg(res.data.Error);
-                }
-            })
-            .then(err => { console.log(err) })
-    }, [])
+        axios.get('http://localhost:8081/api/rejoindre')
+          .then(res => {
+            if (res.data.Status === "Succes") {
+              setAuth(true);
+              setId(res.data.id);
+              console.log(res.data.id); // Afficher l'ID reçu dans la console
+            } else {
+              setAuth(false);
+              setMsg(res.data.Error);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }, []);
+      
 
     return (
         <div>

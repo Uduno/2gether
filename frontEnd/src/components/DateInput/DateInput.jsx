@@ -66,7 +66,7 @@ const DateInput = ({ onSelectedDate, errorMessage }) => {
           onChange={handleInputChange}
           placeholder="Entrez les dates séparées par des virgules (Max 6 dates)"
         />
-        {errorMessage && <p>{errorMessage}</p>}
+        {errorMessage && <p className="error">{errorMessage}</p>}
     </div>
   );
 };

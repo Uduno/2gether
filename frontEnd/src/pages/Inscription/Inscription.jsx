@@ -34,7 +34,7 @@ function Inscription() {
         return; // Arrête l'exécution de la fonction handleSubmit
       }
       // Toutes les valeurs sont valides, soumettre le formulaire
-      axios.post('http://localhost:8081/inscription', values)
+      axios.post('http://localhost:8081/api/inscription', values)
         .then(res => {
           console.log(res.data); // Affiche la réponse du serveur
         })
